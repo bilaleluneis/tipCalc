@@ -39,6 +39,8 @@ public class CalcActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putDouble(BILL_TOTAL,currentBillTotal);
+        outState.putInt(CUSTOM_PERCENT,currentCustomPercent);
     }
 
 
@@ -92,6 +94,14 @@ public class CalcActivity extends Activity {
         double twentyPercentTotal = currentBillTotal + twentyPercentTip;
         tip20EditText.setText(String.format("%.02f",twentyPercentTip));
         total20EditText.setText(String.format("%.02f", twentyPercentTotal));
+    }
+
+    private void updateCustom(){
+        customTipTextView.setText(currentCustomPercent + "%");
+        double customTipAmount = currentBillTotal * currentCustomPercent * .01;
+        double customTotalAmount = currentBillTotal + customTipAmount;
+        tipCustomEditText.setText(String.format("%.02f",customTipAmount));
+        totalCustomEditText.setText(String.format("%.02f",customTotalAmount));
     }
 
 }
