@@ -3,6 +3,7 @@ package org.tutorial.bilaleluneis.tipcalc;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class CalcActivity extends Activity {
@@ -11,9 +12,10 @@ public class CalcActivity extends Activity {
     private static final String BILL_TOTAL = "BILL_TOTAL";
     private static final String CUSTOM_PERCENT = "CUSTOM_PERCENT";
 
-    private double currentBillTotal;
-    private int currentCustomPercent;
+    private double   currentBillTotal;
+    private int      currentCustomPercent;
     private TextView customTipTextView;
+    private SeekBar  customSeekBar;
     private EditText tip10EditText;
     private EditText tip15EditText;
     private EditText tip20EditText;
@@ -39,8 +41,9 @@ public class CalcActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
-    // Obtain references to UI elements
+
     private void initUIElements(){
+        //obtain reference for each UI element from activity_calc.xml
         customTipTextView = (TextView) findViewById(R.id.customTipTextView);
         tip10EditText = (EditText) findViewById(R.id.tip10EditText);
         tip15EditText = (EditText) findViewById(R.id.tip15EditText);
@@ -51,6 +54,11 @@ public class CalcActivity extends Activity {
         billEditText = (EditText) findViewById(R.id.billEditText);
         tipCustomEditText = (EditText) findViewById(R.id.tipCustomEditText);
         totalCustomEditText = (EditText) findViewById(R.id.totalCustomEditText);
+        customSeekBar = (SeekBar) findViewById(R.id.customSeekBar);
+
+        //attach event listener to UI elements that requires them
+        //billEditText.addTextChangedListener(billEditTextWatcher);
+        //customSeekBar.setOnSeekBarChangeListener(customSeekBarListener);
     }
 
     //Reloads saved data if there are any
@@ -63,6 +71,27 @@ public class CalcActivity extends Activity {
             currentBillTotal = savedInstanceState.getDouble(BILL_TOTAL);
             currentCustomPercent = savedInstanceState.getInt(CUSTOM_PERCENT);
         }
+    }
+
+    // update 10, 15 and 20 percent tip EditTexts
+    private void updateStandard(){
+        // calculate 10% tip and total
+        double tenPercentTip = currentBillTotal * .1;
+        double tenPercentTotal = currentBillTotal + tenPercentTip;
+        tip10EditText.setText(String.format("%.02f",tenPercentTip));
+        total10EditText.setText(String.format("%.02f",tenPercentTotal));
+
+        //calculate 15% tip and total
+        double fifteenPercentTip = currentBillTotal * .15;
+        double fifteenPercentTotal = currentBillTotal + fifteenPercentTip;
+        tip15EditText.setText(String.format("%.02f",fifteenPercentTip));
+        total15EditText.setText(String.format("%.02f",fifteenPercentTotal));
+
+        //calculate 20% tip and total
+        double twentyPercentTip = currentBillTotal * .20;
+        double twentyPercentTotal = currentBillTotal + twentyPercentTip;
+        tip20EditText.setText(String.format("%.02f",twentyPercentTip));
+        total20EditText.setText(String.format("%.02f", twentyPercentTotal));
     }
 
 }
