@@ -2,6 +2,9 @@ package org.tutorial.bilaleluneis.tipcalc;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -11,6 +14,7 @@ public class CalcActivity extends Activity {
     // used to pass data on save instance of activity
     private static final String BILL_TOTAL = "BILL_TOTAL";
     private static final String CUSTOM_PERCENT = "CUSTOM_PERCENT";
+    private static final String TAG =  CalcActivity.class.getName();
 
     private double   currentBillTotal;
     private int      currentCustomPercent;
@@ -59,8 +63,8 @@ public class CalcActivity extends Activity {
         customSeekBar = (SeekBar) findViewById(R.id.customSeekBar);
 
         //attach event listener to UI elements that requires them
-        //billEditText.addTextChangedListener(billEditTextWatcher);
-        //customSeekBar.setOnSeekBarChangeListener(customSeekBarListener);
+        billEditText.addTextChangedListener(billEditTextWatcher);
+        customSeekBar.setOnSeekBarChangeListener(customSeekBarListener);
     }
 
     //Reloads saved data if there are any
@@ -103,5 +107,43 @@ public class CalcActivity extends Activity {
         tipCustomEditText.setText(String.format("%.02f",customTipAmount));
         totalCustomEditText.setText(String.format("%.02f",customTotalAmount));
     }
+
+    //anonymous inner class customSeekBarListener
+    private SeekBar.OnSeekBarChangeListener customSeekBarListener =
+            new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            currentCustomPercent = seekBar.getProgress();
+            updateCustom();
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar){}
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {}
+    };
+
+    //anonymous inner class billEditTextWatcher
+    private TextWatcher billEditTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            try{
+                currentBillTotal = Double.parseDouble(s.toString());
+            }catch(NumberFormatException ex){
+                Log.e(TAG, "onTextChanged: ", ex);
+                currentBillTotal = 0.0;
+            }finally{
+                updateStandard();
+                updateCustom();
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {}
+    };
 
 }
