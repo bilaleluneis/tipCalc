@@ -43,6 +43,7 @@ public class CalcActivity extends Activity implements SeekBar.OnSeekBarChangeLis
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: Attempting to save User Data !");
         outState.putDouble(BILL_TOTAL,currentBillTotal);
         outState.putInt(CUSTOM_PERCENT,currentCustomPercent);
     }
@@ -128,7 +129,6 @@ public class CalcActivity extends Activity implements SeekBar.OnSeekBarChangeLis
         try{
             currentBillTotal = Double.parseDouble(s.toString());
         }catch(NumberFormatException ex){
-            Log.e(TAG, "onTextChanged: ", ex);
             currentBillTotal = 0.0;
         }finally{
             updateStandard();
